@@ -1,23 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+// https://type.fit/api/quotes (API)
+import "./App.css";
+import React, { useState } from "react";
 
 function App() {
+  const [quote, setQuote] = useState({});
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const response = await fetch("https://type.fit/api/quotes");
+    const data = await response.json();
+    const randomQuote = data[Math.trunc(Math.random() * data.length)];
+    console.log(randomQuote);
+
+    setQuote(randomQuote);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <form className="quote-container">
+        <blockquote>{quote.text}</blockquote>
+        {quote.author ? <div>{quote.author}</div> : <div>Unknown</div>}
+      </form>
+      <button onClick={submitHandler} className="btn">
+        Search For A Quote!
+      </button>
     </div>
   );
 }
